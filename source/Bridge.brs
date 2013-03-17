@@ -4,18 +4,18 @@ Function newBridge(ip as String, client as String) As Object
     bridge.client = client
     bridge.GetLights = bridgeGetLights
     bridge.GetGroups = bridgeGetGroups
+    bridge.restClient = newRestClient("http://"+ ip + "/api/" + client)
     return bridge
 End Function
 
 Function bridgeGetLights() As Object
     lights = CreateObject("roList")
-    ' TODO: GET to /api/newdeveloper/lights and /api/newdeveloper/light/X
-    light = newLight(m, "1")
-    lights.AddTail(light)
-    light = newLight(m, "2")
-    lights.AddTail(light)
-    light = newLight(m, "3")
-    lights.AddTail(light)
+    response = m.restClient.Get("/lights")
+    for each id in response
+        ' TODO: GET to /api/newdeveloper/lights and /api/newdeveloper/light/X
+       light = newLight(m, id, response[id].name)      
+       lights.AddHead(light)
+    end for
     return lights
 End Function
 

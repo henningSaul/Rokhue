@@ -1,4 +1,4 @@
-Function newGroup(bridge as Object, id as String) As Object
+Function newGroup(bridge As Object, id As String) As Object
     group = CreateObject("roAssociativeArray")
     group.bridge = bridge
     group.id = id
