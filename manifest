@@ -1,0 +1,11 @@
+title=Rokhue
+subtitle=TODO
+major_version=0
+minor_version=1
+build_version=1
+mm_icon_focus_hd=pkg:/images/Logo_Main.png
+mm_icon_side_hd=pkg:/images/Logo_Main.png
+mm_icon_focus_sd=pkg:/images/Logo_Main.png
+mm_icon_side_sd=pkg:/images/Logo_Main.png
+splash_screen_hd=pkg:/images/Splash_HD.jpg
+splash_screen_sd=pkg:/images/Splash_SD43.jpg
