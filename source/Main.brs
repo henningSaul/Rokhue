@@ -7,7 +7,6 @@ Function showPosterScreen() As Integer
     port = CreateObject("roMessagePort")
     screen = CreateObject("roPosterScreen")
     screen.SetMessagePort(port)
-    screen.Show()  
     screen.SetListNames(["Lights"])
     bridge = getBridge("newdeveloper")
     'bridge = getBridge("Rokhue")
@@ -23,16 +22,23 @@ Function showPosterScreen() As Integer
         lightsAndGroups.AddTail(group)
     end for
     contentList = getAsContentList(lightsAndGroups)
+    ' get state of first light, others are loaded lazy
+    if(contentList.Count() > 0) 
+        contentList[0].RefreshState()
+    end if
     screen.SetContentList(contentList)
-    ' TODO: preselect lights/first light
+    ' TODO: preselect lights/first light not working
     screen.setFocusedList(0)
     screen.setFocusedListItem(0)
+    screen.Show()  
     while true
         msg = wait(0, screen.GetMessagePort())
-        print type(msg)
-        if type(msg) = "roPosterScreenEvent" then  
-            ' TODO: detect fast forward/rewind?          
-            if msg.isListItemSelected() then
+        ' TODO: how to detect fast forward/rewind?   
+        if type(msg) = "roPosterScreenEvent" then
+            if msg.isListItemFocused() then 
+                contentList[msg.GetIndex()].RefreshState()
+                screen.SetContentList(contentList)
+            else if msg.isListItemSelected() then
                 ' TODO: toggle state                               
                 print "Selected" ;msg.GetIndex()
             else if msg.isScreenClosed() then
