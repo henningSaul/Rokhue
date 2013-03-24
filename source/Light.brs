@@ -9,6 +9,7 @@ Function newLight(bridge As Object, id As String, name As String) As Object
     light.IsOn = lightIsOn
     light.IsReachable = lightIsReachable
     light.GetBrightness = lightGetBrightness
+    light.ToggleOnOff = lightToggleOnOff
     light.AsContent = lightAsContent
     return light
 End Function
@@ -30,6 +31,10 @@ Function lightGetBrightness() As Integer
     return m.details.state.Lookup("bri")
 End Function
 
+Function lightToggleOnOff() As Integer
+    m.bridge.SetLightState(m.id, {on : not m.IsOn()})
+End Function
+
 Function lightAsContent() As Object
     content = CreateObject("roAssociativeArray")
     content.light = m
@@ -37,6 +42,7 @@ Function lightAsContent() As Object
     content.ShortDescriptionLine2 = ""
     ' TODO: set image/poster url
     content.RefreshState = lightContentRefreshState
+    content.ToggleOnOff = lightContentToggleOnOff
     return content
 End Function
 
@@ -48,3 +54,8 @@ Function lightContentRefreshState()
         m.ShortDescriptionLine2 = "State: Off"      
     end if
 End Function
+
+Function lightContentToggleOnOff()
+    m.light.ToggleOnOff()
+End Function
+

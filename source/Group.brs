@@ -5,10 +5,11 @@ Function newGroup(bridge As Object, id As String, name As String) As Object
     group.name = name
     ' lazy fetching of details/state
     group.details = invalid
-    group.RefreshState = groupRefreshState
     group.IsOn = groupIsOn    
+    group.RefreshState = groupRefreshState 
+    group.IsOn = groupIsOn
+    group.ToggleOnOff = groupToggleOnOff  
     group.AsContent = groupAsContent
-    group.RefreshState = groupRefreshState    
     return group
 End Function
 
@@ -17,8 +18,11 @@ Function groupRefreshState()
 End Function
 
 Function groupIsOn() As Boolean
-    ' TODO: not sure whether using action.on makes sense
     return m.details.action.Lookup("on")
+End Function
+
+Function groupToggleOnOff() As Integer
+    m.bridge.SetGroupState(m.id, {on : not m.IsOn()})
 End Function
 
 Function groupAsContent() 
@@ -28,6 +32,7 @@ Function groupAsContent()
     content.ShortDescriptionLine2 = ""
     ' TODO: set image/poster url
     content.RefreshState = groupContentRefreshState
+    content.ToggleOnOff = groupContentToggleOnOff
     return content
 End Function
 
@@ -38,4 +43,8 @@ Function groupContentRefreshState()
     else 
         m.ShortDescriptionLine2 = "State: Off"      
     end if
+End Function
+
+Function groupContentToggleOnOff()
+    m.group.ToggleOnOff()
 End Function
