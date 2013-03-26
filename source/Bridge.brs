@@ -19,7 +19,11 @@ Function newBridge(ip as String, client as String) As Object
     ' debug API http://10.0.1.102/debug/clip.html
     bridge = CreateObject("roAssociativeArray")
     bridge.ip = ip
-    bridge.client = client
+    bridge.devicetype = client
+    ' use device id as username
+    deviceInfo = CreateObject("roDeviceInfo")
+    deviceId = deviceInfo.GetDeviceUniqueId()    
+    bridge.username = deviceId
     ' http://developers.meethue.com/1_lightsapi.html
     bridge.GetLights = bridgeGetLights
     bridge.GetLightDetails = bridgeGetLightDetails
@@ -28,7 +32,10 @@ Function newBridge(ip as String, client as String) As Object
     bridge.GetGroups = bridgeGetGroups
     bridge.GetGroupDetails = bridgeGetGroupDetails
     bridge.SetGroupState = bridgeSetGroupState    
-    bridge.restClient = newRestClient("http://"+ ip + "/api/" + client)
+    ' http://developers.meethue.com/4_configurationapi.html
+    bridge.IsAuthorized = bridgeIsAuthorized
+    bridge.RequestAuthorization = bridgeRequestAuthorization
+    bridge.restClient = newRestClient("http://"+ ip + "/api/" + deviceId)
     return bridge
 End Function
 
@@ -71,4 +78,23 @@ End Function
 Function bridgeSetGroupState(id As String, state As Object)
     ' fire and forget...
     m.restClient.Put("/groups/" + id + "/action", state)
+End Function
+
+Function bridgeIsAuthorized() As Boolean
+    response = m.restClient.Get("/lights")    
+    if (hasError(response))
+        print "Device/username " + m.username + " is not authorized" 
+        return false
+    else
+        return true
+    end if
+End Function
+
+Function hasError(response As Object) As Boolean
+    return (response[0].error <> invalid)
+End Function
+
+Function bridgeRequestAuthorization()
+    print "Requesting bridge authorization for device/username " + m.username
+    
 End Function

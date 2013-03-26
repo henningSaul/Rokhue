@@ -17,21 +17,19 @@
 '
 
 ' TODO: bridge authorization
+' TODO: separate categories for lights and groups
 ' TODO: HTTP Put to set state, and associativeArray to JSON
 ' TODO: theme + artwork
-' TODO: separate categories for lights and groups
 ' TODO: dimming lights and groups
 
 Sub Main()
     initTheme()
-    'bridge = getBridge("Rokhue")
-    bridge = getBridge("newdeveloper")
+    bridge = getBridge("Rokhue")
     ' check if bridge could be found
     if(bridge = invalid) 
         showNoBridgeScreen()
-    else  
-        ' TODO: check if channel is authorized
-        showHomeScreen(bridge)    
+    else if (checkAuthorisation(bridge))  
+        showHomeScreen(bridge)
     end if
 End Sub
 
@@ -78,32 +76,6 @@ Function showHomeScreen(bridge As Object) As Integer
     end while
 End Function
 
-Function showNoBridgeScreen() 
-    port = CreateObject("roMessagePort")
-    screen = CreateObject("roParagraphScreen")
-    screen.SetMessagePort(port)
-    screen.SetTitle("Error")
-    screen.AddHeaderText("Failed to discover hue bridge")
-    screen.AddParagraph("This channel requires a Philips hue lighting system and a working internet connection.")
-    screen.AddParagraph("Please make sure that your hue bridge is turned on and your internet connection is working.")
-    screen.AddParagraph("The following URL should return your bridge's internal IP address:")
-    screen.AddParagraph("http://www.meethue.com/api/nupnp")
-    screen.AddButton(1, "Exit")
-    screen.Show()
-    while true
-        msg = wait(0, screen.GetMessagePort())
-        if type(msg) = "roParagraphScreenEvent"
-            if msg.isScreenClosed()
-                print "Screen closed"
-                exit while                
-            else if msg.isButtonPressed()
-                print "Button pressed: "; msg.GetIndex(); " " msg.GetData()
-                exit while
-            endif
-        endif
-    end while
-End Function
-
 Function getBridge(client As String) As Object
     ' user broker server discover process 
     discoveryService = newRestClient("http://www.meethue.com/api")
@@ -125,3 +97,58 @@ Function getAsContentList(lights As Object) As Object
     end for
     return contentList
 End Function
+
+Function showNoBridgeScreen() 
+    port = CreateObject("roMessagePort")
+    screen = CreateObject("roParagraphScreen")
+    screen.SetMessagePort(port)
+    screen.SetTitle("Error")
+    screen.AddHeaderText("Failed to discover hue bridge")
+    screen.AddParagraph("This channel requires a Philips hue lighting system and a working internet connection.")
+    screen.AddParagraph("Please make sure that your hue bridge is turned on and your internet connection is working.")
+    screen.AddParagraph("The following URL should return your bridge's internal IP address:")
+    screen.AddParagraph("http://www.meethue.com/api/nupnp")
+    screen.AddButton(1, "Exit")
+    screen.Show()
+    while true
+        msg = wait(0, screen.GetMessagePort())
+        if type(msg) = "roParagraphScreenEvent"
+            if msg.isScreenClosed()
+                exit while                
+            else if msg.isButtonPressed()
+                exit while
+            endif
+        endif
+    end while
+End Function
+
+Function checkAuthorisation(bridge As Object) As Boolean
+    if(bridge.IsAuthorized())
+        return true
+    end if
+    port = CreateObject("roMessagePort")
+    screen = CreateObject("roParagraphScreen")
+    screen.SetMessagePort(port)
+    screen.SetTitle("Info")
+    screen.AddHeaderText("Bridge authorization required")
+    screen.AddParagraph("This channel needs to be authorized to control your hue lighting system.")
+    screen.AddParagraph("Please press the link button on your hue bridge and click retry.")
+    screen.AddButton(1, "Retry")
+    screen.AddButton(2, "Exit")
+    screen.Show() 
+    while (not bridge.isAuthorized())
+        bridge.RequestAuthorization()  
+        msg = wait(0, screen.GetMessagePort())
+        if type(msg) = "roParagraphScreenEvent"
+            if msg.isScreenClosed()
+                exit while                
+            else if msg.isButtonPressed()
+                if(msg.GetIndex() = 2)
+                    exit while
+                end if
+            endif
+        endif      
+    end while
+    return bridge.IsAuthorized()
+End Function
+
