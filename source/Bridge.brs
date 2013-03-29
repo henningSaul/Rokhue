@@ -81,7 +81,7 @@ Function bridgeSetGroupState(id As String, state As Object)
 End Function
 
 Function bridgeIsAuthorized() As Boolean
-    response = m.restClient.Get("/lights")    
+    response = m.restClient.Get("/lights")
     if (hasError(response))
         print "Device/username " + m.username + " is not authorized" 
         return false
@@ -91,10 +91,18 @@ Function bridgeIsAuthorized() As Boolean
 End Function
 
 Function hasError(response As Object) As Boolean
+    if(response = invalid)
+        return true
+    end if
+    if(type(response) = "roAssociativeArray")
+        return true
+    end if
     return (response[0].error <> invalid)
 End Function
 
 Function bridgeRequestAuthorization()
     print "Requesting bridge authorization for device/username " + m.username
-    
+    restClient = newRestClient("http://"+ m.ip + "/api")
+    userInfo = {devicetype: m.devicetype, username: m.username}
+    restClient.Post("", userInfo)     
 End Function

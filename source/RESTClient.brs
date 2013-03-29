@@ -20,6 +20,7 @@ Function newRESTClient(baseurl As String) As Object
     client.baseurl = baseurl
     client.Get = restClientGet
     client.Put = restClientPut
+    client.Post = restClientPost
     return client
 End Function
 
@@ -27,14 +28,20 @@ Function restClientGet(url As String) As Dynamic
     roUrlTransfer = CreateObject("roUrlTransfer")
     roUrlTransfer.SetUrl(m.baseurl + url)
     response = roUrlTransfer.GetToString()
-    ' available in current 3.1 release? need to get box of beta list
+    ' available since 3.1 b1027
     ' http://forums.roku.com/viewtopic.php?f=28&t=36409&p=373443&hilit=JSON#p373443
     return ParseJSON(response)
 End Function
 
 ' TODO: HTTP PUT? http://forums.roku.com/viewtopic.php?f=34&t=34740
-Function restClientPut(url As String, associativeArray As Object) As Object
-    print associativeArray
-    response = ""
-    return ParseJSON(response)    
+Function restClientPut(url As String, associativeArray As Object)
+    print associativeArray 
+End Function
+
+Function restClientPost(url As String, associativeArray As Object)
+    roUrlTransfer = CreateObject("roUrlTransfer")
+    roUrlTransfer.SetUrl(m.baseurl + url)
+    json = rdSerialize(associativeArray, "JSON")
+    print "Posting to " + roUrlTransfer.GetUrl() + ": " + json
+    roUrlTransfer.PostFromString(json)
 End Function
