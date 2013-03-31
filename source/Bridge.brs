@@ -43,8 +43,12 @@ Function bridgeGetLights() As Object
     lights = CreateObject("roList")
     response = m.restClient.Get("/lights")
     for each id in response
-       light = newLight(m, id, response[id].name)      
-       lights.AddHead(light)
+        light = newLight(m, id, response[id].name)
+        ' get details and check if light is reachable
+        light.RefreshState()
+        if(light.IsReachable())
+            lights.AddHead(light)       
+        end if      
     end for
     return lights
 End Function
