@@ -59,7 +59,14 @@ Function groupAsContent()
     content.group = m
     content.ShortDescriptionLine1 = m.name
     content.ShortDescriptionLine2 = ""
-    ' TODO: set image/poster url
+    content.SDPosterUrl = "pkg:/images/off.jpg"
+    content.HDPosterUrl = "pkg:/images/off.jpg"
+    if(not m.details = invalid)
+        if(m.IsOn())
+            content.SDPosterUrl = "pkg:/images/on.jpg"
+            content.HDPosterUrl = "pkg:/images/on.jpg"        
+        end if
+    end if
     content.RefreshState = groupContentRefreshState
     content.IsOn = groupContentIsOn
     content.ToggleOnOff = groupContentToggleOnOff
@@ -70,8 +77,12 @@ End Function
 Function groupContentRefreshState()
     m.group.RefreshState()
     if(m.group.IsOn() = true) 
+        m.SDPosterUrl = "pkg:/images/on.jpg"
+        m.HDPosterUrl = "pkg:/images/on.jpg"
         m.ShortDescriptionLine2 = "State: On"  
     else 
+        m.SDPosterUrl = "pkg:/images/off.jpg"
+        m.HDPosterUrl = "pkg:/images/off.jpg" 
         m.ShortDescriptionLine2 = "State: Off"      
     end if
 End Function

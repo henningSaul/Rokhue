@@ -69,7 +69,8 @@ Function bridgeGetGroups() As Object
     ' get user defined groups    
     response = m.restClient.Get("/groups")
     for each id in response
-       group = newGroup(m, id, response[id].name)      
+       group = newGroup(m, id, response[id].name)  
+       group.RefreshState()    
        groups.AddHead(group)
     end for
     return groups

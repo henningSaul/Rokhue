@@ -61,8 +61,15 @@ Function lightAsContent() As Object
     content = CreateObject("roAssociativeArray")
     content.light = m
     content.ShortDescriptionLine1 = m.name
-    content.ShortDescriptionLine2 = ""
-    ' TODO: set image/poster url
+    content.ShortDescriptionLine2 = ""  
+    content.SDPosterUrl = "pkg:/images/off.jpg"
+    content.HDPosterUrl = "pkg:/images/off.jpg"
+    if(not m.details = invalid)
+        if(m.IsOn())
+            content.SDPosterUrl = "pkg:/images/on.jpg"
+            content.HDPosterUrl = "pkg:/images/on.jpg"        
+        end if
+    end if
     content.RefreshState = lightContentRefreshState
     content.IsOn = lightContentIsOn
     content.ToggleOnOff = lightContentToggleOnOff
@@ -73,9 +80,13 @@ End Function
 Function lightContentRefreshState()
     m.light.RefreshState()
     if(m.light.IsOn() = true) 
+        m.SDPosterUrl = "pkg:/images/on.jpg"
+        m.HDPosterUrl = "pkg:/images/on.jpg"
         m.ShortDescriptionLine2 = "State: On, Brightness " + Stri(m.light.GetBrightness())    
-    else 
-        m.ShortDescriptionLine2 = "State: Off"      
+    else
+        m.SDPosterUrl = "pkg:/images/off.jpg"
+        m.HDPosterUrl = "pkg:/images/off.jpg" 
+        m.ShortDescriptionLine2 = "State: Off"     
     end if
 End Function
 
