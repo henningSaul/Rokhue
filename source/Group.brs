@@ -22,10 +22,11 @@ Function newGroup(bridge As Object, id As String, name As String) As Object
     group.name = name
     ' lazy fetching of details/state
     group.details = invalid
-    group.IsOn = groupIsOn    
+    group.lights = invalid
+    group.IsOn = groupIsOn 
+    group.SetOn = groupSetOn   
     group.RefreshState = groupRefreshState 
-    group.IsOn = groupIsOn
-    group.ToggleOnOff = groupToggleOnOff  
+    group.GetLights = groupGetLights
     group.AsContent = groupAsContent
     return group
 End Function
@@ -38,8 +39,19 @@ Function groupIsOn() As Boolean
     return m.details.action.Lookup("on")
 End Function
 
-Function groupToggleOnOff() As Integer
-    m.bridge.SetGroupState(m.id, {on : not m.IsOn()})
+Function groupSetOn(o As Boolean)
+    m.bridge.SetGroupState(m.id, {on : o})
+End Function
+
+Function groupGetLights() As Object
+    if(m.lights <> invalid)
+        return m.lights
+    end if
+    m.lights = CreateObject("roList")  
+    for each id in m.details.lights
+        m.lights.addHead(newLight(m.bridge, id, "Light " + id))  
+    end for
+    return m.lights
 End Function
 
 Function groupAsContent() 
@@ -49,7 +61,9 @@ Function groupAsContent()
     content.ShortDescriptionLine2 = ""
     ' TODO: set image/poster url
     content.RefreshState = groupContentRefreshState
+    content.IsOn = groupContentIsOn
     content.ToggleOnOff = groupContentToggleOnOff
+    content.LowerBrightness = groupContentLowerBrightness
     return content
 End Function
 
@@ -62,6 +76,24 @@ Function groupContentRefreshState()
     end if
 End Function
 
+Function groupContentIsOn() As Boolean
+    return m.group.IsOn()
+End Function
+
 Function groupContentToggleOnOff()
-    m.group.ToggleOnOff()
+    m.group.setOn(not m.group.IsOn())
+End Function
+
+Function groupContentLowerBrightness(count As Integer)
+    for each light in m.group.GetLights()
+        light.RefreshState()
+        bri = light.GetBrightness()
+        if(bri > 0)
+            bri = bri - count
+            if(bri < 0)
+                bri = 0
+            end if  
+            light.SetBrightness(bri)        
+        end if   
+    end for
 End Function

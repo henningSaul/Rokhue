@@ -15,12 +15,9 @@
 ' You should have received a copy of the GNU General Public License
 ' along with Rokhue.  If not, see <http://www.gnu.org/licenses/>.
 '
-
-' TODO: bridge authorization
-' TODO: separate categories for lights and groups
-' TODO: HTTP Put to set state, and associativeArray to JSON
-' TODO: theme + artwork
 ' TODO: dimming lights and groups
+' TODO: HTTP Put to set state, waiting on http://forums.roku.com/viewtopic.php?f=34&t=34740
+' TODO: theme + artwork
 
 Sub Main()
     initTheme()
@@ -41,7 +38,7 @@ Function showHomeScreen(bridge As Object) As Integer
     ' get lights from Bridge    
     lights = bridge.GetLights()
     contentList = getAsContentList(lights)
-    ' get state of first light, others are loaded lazy
+    ' get state of first light
     if(contentList.Count() > 0) 
         contentList[0].RefreshState()
     end if
@@ -73,7 +70,16 @@ Function showHomeScreen(bridge As Object) As Integer
             else if msg.isListItemSelected() then
                 contentList[msg.GetIndex()].ToggleOnOff()
                 contentList[msg.GetIndex()].RefreshState()
-                screen.SetContentList(contentList)                
+                screen.SetContentList(contentList)
+            ' Info button presses -> dim lights or turn on (if off)
+            else if msg.isListItemInfo() then
+                if(contentList[msg.GetIndex()].IsOn())
+                    contentList[msg.GetIndex()].LowerBrightness(255/5)  
+                else
+                    contentList[msg.GetIndex()].ToggleOnOff()             
+                end if
+                contentList[msg.GetIndex()].RefreshState()
+                screen.SetContentList(contentList)               
             else if msg.isScreenClosed() then
                 return -1
             end if

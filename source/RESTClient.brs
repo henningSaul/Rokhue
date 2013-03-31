@@ -36,7 +36,10 @@ End Function
 
 ' TODO: HTTP PUT? http://forums.roku.com/viewtopic.php?f=34&t=34740
 Function restClientPut(url As String, associativeArray As Object)
-    print associativeArray 
+    roUrlTransfer = CreateObject("roUrlTransfer")
+    roUrlTransfer.SetUrl(m.baseurl + url)
+    json = rdSerialize(associativeArray, "JSON")
+    print "Putting to " + roUrlTransfer.GetUrl() + ": " + json
 End Function
 
 Function restClientPost(url As String, associativeArray As Object)

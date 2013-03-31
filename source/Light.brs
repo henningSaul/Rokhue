@@ -24,9 +24,10 @@ Function newLight(bridge As Object, id As String, name As String) As Object
     light.details = invalid
     light.RefreshState = lightRefreshState
     light.IsOn = lightIsOn
+    light.SetOn = lightSetOn
     light.IsReachable = lightIsReachable
     light.GetBrightness = lightGetBrightness
-    light.ToggleOnOff = lightToggleOnOff
+    light.SetBrightness = lightSetBrightness
     light.AsContent = lightAsContent
     return light
 End Function
@@ -39,7 +40,11 @@ Function lightIsOn() As Boolean
     return m.details.state.Lookup("on")
 End Function
 
-' TODO: currently always returns true, see http://developers.meethue.com/1_lightsapi.html
+Function lightSetOn(o As Boolean)
+    m.bridge.SetLightState(m.id, {on : o})
+End Function
+
+' currently always returns true, see http://developers.meethue.com/1_lightsapi.html
 Function lightIsReachable() As Boolean
     return m.details.state.Lookup("reachable")
 End Function
@@ -48,8 +53,8 @@ Function lightGetBrightness() As Integer
     return m.details.state.Lookup("bri")
 End Function
 
-Function lightToggleOnOff() As Integer
-    m.bridge.SetLightState(m.id, {on : not m.IsOn()})
+Function lightSetBrightness(bri As Integer)
+    m.bridge.SetLightState(m.id, {bri : bri})
 End Function
 
 Function lightAsContent() As Object
@@ -59,7 +64,9 @@ Function lightAsContent() As Object
     content.ShortDescriptionLine2 = ""
     ' TODO: set image/poster url
     content.RefreshState = lightContentRefreshState
+    content.IsOn = lightContentIsOn
     content.ToggleOnOff = lightContentToggleOnOff
+    content.LowerBrightness = lightContentLowerBrightness
     return content
 End Function
 
@@ -72,7 +79,20 @@ Function lightContentRefreshState()
     end if
 End Function
 
+Function lightContentIsOn() As Boolean
+    return m.light.IsOn()
+End Function
+
 Function lightContentToggleOnOff()
-    m.light.ToggleOnOff()
+    m.light.SetOn(not m.light.IsOn())
+End Function
+
+Function lightContentLowerBrightness(count As Integer)
+    bri = m.light.GetBrightness()
+    bri = bri - count
+    if(bri < 0)
+        bri = 255 - count
+    end if
+    m.light.SetBrightness(bri)
 End Function
 
