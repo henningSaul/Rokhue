@@ -92,7 +92,16 @@ Function groupContentIsOn() As Boolean
 End Function
 
 Function groupContentToggleOnOff()
-    m.group.setOn(not m.group.IsOn())
+    if(m.id = 0)
+        m.group.setOn(not m.group.IsOn())
+    else
+        ' does not seem to be working for custom groups
+        ' http://www.everyhue.com/?page_id=38#/discussion/320/the-philips-hue-api-is-available
+        ' as a workaround, we're setting the state on each light
+        for each light in m.group.GetLights()
+            light.SetOn(not m.group.IsOn())
+        end for
+    end if
 End Function
 
 Function groupContentLowerBrightness(count As Integer)

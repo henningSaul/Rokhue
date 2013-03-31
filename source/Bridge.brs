@@ -19,6 +19,8 @@ Function newBridge(ip as String, client as String) As Object
     ' debug API http://10.0.1.102/debug/clip.html
     bridge = CreateObject("roAssociativeArray")
     bridge.ip = ip
+    bridge.port = 80
+    bridge.protocol = "http"
     bridge.devicetype = client
     ' use device id as username
     deviceInfo = CreateObject("roDeviceInfo")
@@ -35,7 +37,7 @@ Function newBridge(ip as String, client as String) As Object
     ' http://developers.meethue.com/4_configurationapi.html
     bridge.IsAuthorized = bridgeIsAuthorized
     bridge.RequestAuthorization = bridgeRequestAuthorization
-    bridge.restClient = newRestClient("http://"+ ip + "/api/" + deviceId)
+    bridge.restClient = newRestClient(bridge.ip, bridge.port, bridge.protocol, "/api/" + deviceId)
     return bridge
 End Function
 
@@ -107,7 +109,7 @@ End Function
 
 Function bridgeRequestAuthorization()
     print "Requesting bridge authorization for device/username " + m.username
-    restClient = newRestClient("http://"+ m.ip + "/api")
+    restClient = newRestClient(m.ip, m.port, m.protocol, "/api")
     userInfo = {devicetype: m.devicetype, username: m.username}
     restClient.Post("", userInfo)     
 End Function

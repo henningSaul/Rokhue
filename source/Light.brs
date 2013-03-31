@@ -102,7 +102,7 @@ Function lightContentLowerBrightness(count As Integer)
     bri = m.light.GetBrightness()
     bri = bri - count
     if(bri < 0)
-        bri = 255 - count
+        bri = 255
     end if
     m.light.SetBrightness(bri)
 End Function

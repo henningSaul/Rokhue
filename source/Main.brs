@@ -89,7 +89,7 @@ End Function
 
 Function getBridge(client As String) As Object
     ' user broker server discover process 
-    discoveryService = newRestClient("http://www.meethue.com/api")
+    discoveryService = newRestClient("www.meethue.com", 80, "http", "/api")
     bridgeInfo = discoveryService.Get("/nupnp")
     if(bridgeInfo = invalid)
         return invalid
