@@ -27,6 +27,7 @@ End Function
 Function restClientGet(url As String) As Dynamic
     roUrlTransfer = CreateObject("roUrlTransfer")
     roUrlTransfer.SetUrl(m.baseurl + url)
+    print "Getting from " + m.baseurl + url
     response = roUrlTransfer.GetToString()
     ' available since 3.1 b1027
     ' http://forums.roku.com/viewtopic.php?f=28&t=36409&p=373443&hilit=JSON#p373443

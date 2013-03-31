@@ -94,10 +94,10 @@ Function hasError(response As Object) As Boolean
     if(response = invalid)
         return true
     end if
-    if(type(response) = "roAssociativeArray")
-        return true
+    if(type(response) = "roArray")
+        return (response[0].error <> invalid)
     end if
-    return (response[0].error <> invalid)
+    return false
 End Function
 
 Function bridgeRequestAuthorization()
