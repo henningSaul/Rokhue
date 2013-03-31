@@ -37,34 +37,39 @@ Function showHomeScreen(bridge As Object) As Integer
     port = CreateObject("roMessagePort")
     screen = CreateObject("roPosterScreen")
     screen.SetMessagePort(port)
-    screen.SetListNames(["Lights"])
-    ' get lights and groups from Bridge    
+    screen.SetListNames(["Lights", "Groups"])
+    ' get lights from Bridge    
     lights = bridge.GetLights()
-    groups = bridge.GetGroups()
-    lightsAndGroups = CreateObject("roList")
-    for each light in lights
-        lightsAndGroups.AddTail(light)
-    end for
-    for each group in groups
-        lightsAndGroups.AddTail(group)
-    end for
-    contentList = getAsContentList(lightsAndGroups)
+    contentList = getAsContentList(lights)
     ' get state of first light, others are loaded lazy
     if(contentList.Count() > 0) 
         contentList[0].RefreshState()
     end if
     screen.SetContentList(contentList)
-    ' TODO: preselect lights/first light not working
-    screen.setFocusedList(0)
-    screen.setFocusedListItem(0)
     screen.Show()  
     while true
         msg = wait(0, screen.GetMessagePort())
-        ' TODO: how to detect fast forward/rewind?   
         if type(msg) = "roPosterScreenEvent" then
-            if msg.isListItemFocused() then 
+            ' Lights or Groups category focused? -> fetch lights/groups
+            if msg.isListFocused() then
+                if(msg.GetIndex() = 0)
+                    lights = bridge.GetLights()
+                    contentList = getAsContentList(lights)
+                end if
+                if(msg.GetIndex() = 1)
+                    groups = bridge.GetGroups()
+                    contentList = getAsContentList(groups)
+                end if 
+                if(contentList.Count() > 0) 
+                    contentList[0].RefreshState()
+                end if
+                screen.SetContentList(contentList)  
+                screen.SetFocusedListItem(0)                            
+            ' Light or Group focused? -> refresh state
+            else if msg.isListItemFocused() then 
                 contentList[msg.GetIndex()].RefreshState()
                 screen.SetContentList(contentList)
+            ' Light or Group selected? -> toggle state
             else if msg.isListItemSelected() then
                 contentList[msg.GetIndex()].ToggleOnOff()
                 contentList[msg.GetIndex()].RefreshState()
