@@ -144,6 +144,8 @@ Function checkAuthorisation(bridge As Object) As Boolean
     screen.AddHeaderText("Bridge authorization required")
     screen.AddParagraph("This channel needs to be authorized to control your hue lighting system.")
     screen.AddParagraph("Please press the link button on your hue bridge and click retry.")
+    screen.AddParagraph(" ")
+    screen.AddParagraph("Once authorized, you can use the OK and * buttons to control your lights.")
     screen.AddButton(1, "Retry")
     screen.AddButton(2, "Exit")
     screen.Show() 
