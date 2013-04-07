@@ -24,20 +24,20 @@ End Sub
 Function getTheme() As Object 
     theme = CreateObject("roAssociativeArray")
     ' General Colors
-    theme.BackgroundColor = "#101010"
+    theme.BackgroundColor = "#301000"
     theme.ParagraphHeaderText = "#EBEBEB"
-    theme.ParagraphBodyText = "#8BABEB"
+    theme.ParagraphBodyText = "#CBCBCB"
     ' PosterScreen colors
-    theme.PosterScreenLine1Text = "#EB4060"
-    theme.PosterScreenLine2Text = "#8BABEB"
+    theme.PosterScreenLine1Text = "#E88D1C"
+    theme.PosterScreenLine2Text = "#9F610A"
     ' FilterBanner colors and images
-    theme.FilterBannerActiveColor = "#EBCB00"
-    theme.FilterBannerInactiveColor = "#AB9B00"
-    'theme.FilterBannerSideColor = "#EB0000"
-    'theme.FilterBannerSliceSD = "pkg:/images/FilterBanner_Slice_SD.png"
-    'theme.FilterBannerActiveSD = "pkg:/images/FilterBanner_Active_SD.png"
-    'theme.FilterBannerSliceHD = "pkg:/images/FilterBanner_Slice_HD.png"
-    'theme.FilterBannerActiveHD = "pkg:/images/FilterBanner_Active_HD.png"
+    theme.FilterBannerActiveColor = "#EBEBEB"
+    theme.FilterBannerInactiveColor = "#8B8B8B"
+    theme.FilterBannerSideColor = "#E88D1C"
+    theme.FilterBannerSliceSD = "pkg:/images/FilterBanner_Slice_SD.png"
+    theme.FilterBannerActiveSD = "pkg:/images/FilterBanner_Active_SD.png"
+    theme.FilterBannerSliceHD = "pkg:/images/FilterBanner_Slice_HD.png"
+    theme.FilterBannerActiveHD = "pkg:/images/FilterBanner_Active_HD.png"
     ' SD Overhang
     theme.OverhangOffsetSD_X = "10"
     theme.OverhangOffsetSD_Y = "14"
