@@ -15,9 +15,6 @@
 ' You should have received a copy of the GNU General Public License
 ' along with Rokhue.  If not, see <http://www.gnu.org/licenses/>.
 '
-' TODO: dimming lights and groups
-' TODO: HTTP Put to set state, waiting on http://forums.roku.com/viewtopic.php?f=34&t=34740
-' TODO: theme + artwork
 
 Sub Main()
     initTheme()

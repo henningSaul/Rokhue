@@ -110,10 +110,11 @@ Function groupContentLowerBrightness(count As Integer)
         bri = light.GetBrightness()
         if(bri > 0)
             bri = bri - count
-            if(bri < 0)
-                bri = 0
-            end if  
-            light.SetBrightness(bri)        
+            if(bri <= 0)
+                light.SetOn(false)
+            else
+                light.SetBrightness(bri)     
+            end if                  
         end if   
     end for
 End Function
