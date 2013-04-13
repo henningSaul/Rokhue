@@ -31,9 +31,9 @@ Function getTheme() As Object
     theme.PosterScreenLine1Text = "#E88D1C"
     theme.PosterScreenLine2Text = "#9F610A"
     ' FilterBanner colors and images
-    theme.FilterBannerActiveColor = "#EBEBEB"
-    theme.FilterBannerInactiveColor = "#8B8B8B"
-    theme.FilterBannerSideColor = "#E88D1C"
+    theme.FilterBannerActiveColor = "#E88D1C"
+    theme.FilterBannerInactiveColor = "#9F610A"
+    theme.FilterBannerSideColor = "#9F610A"
     theme.FilterBannerSliceSD = "pkg:/images/FilterBanner_Slice_SD.png"
     theme.FilterBannerActiveSD = "pkg:/images/FilterBanner_Active_SD.png"
     theme.FilterBannerSliceHD = "pkg:/images/FilterBanner_Slice_HD.png"
