@@ -3,4 +3,5 @@ out/
 target/
 .project
 .buildpath
+.DS_Store
 
