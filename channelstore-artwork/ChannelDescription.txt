@@ -1,1 +1,2 @@
 Control your hue lighting system using your Roku remote.
+Please note that this channel requires a Philips Hue lighting system and bridge in the same network as your Roku box.
